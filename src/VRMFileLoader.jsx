@@ -28,7 +28,7 @@ export default function VRMFileLoader({ setModel, modelURL, setLoading }) {
         });
       },
       (xhr) => {
-        setLoading((xhr.loaded / xhr.total) * 100);
+        setLoading(~~((xhr.loaded / xhr.total) * 100));
       },
       (error) => {
         api.error({
