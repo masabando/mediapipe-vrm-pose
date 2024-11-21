@@ -51,6 +51,9 @@ export default function ModelControls({ hide, cameraPos, setCameraPos, bgColor, 
         <option value="#888">グレー</option>
         <option value="#0f0">緑</option>
       </Form.Select>
+      <div className="text-center" style={{ fontSize: "80%" }}>
+        PCの場合ドラッグ＆ドロップでモデルを読み込めます
+      </div>
     </div>
   );
 }

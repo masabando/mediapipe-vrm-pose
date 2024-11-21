@@ -47,9 +47,12 @@ function App() {
     <div>
       <CameraView
         detectFlag={detectFlag}
-        pose={pose} setPose={setPose}
-        hand={hand} setHand={setHand}
-        face={face} setFace={setFace}
+        pose={pose}
+        setPose={setPose}
+        hand={hand}
+        setHand={setHand}
+        face={face}
+        setFace={setFace}
         hidden={hide}
       />
       <View
@@ -78,10 +81,22 @@ function App() {
           right: "20px",
         }}
       >
-        {detectFlag ? 'Stop' : 'Start'}
+        {detectFlag ? "Stop" : "Start"}
+      </Button>
+      <Button
+        style={{
+          position: "fixed",
+          bottom: "20px",
+          left: "20px",
+        }}
+        onClick={() => {
+          setHide(!hide);
+        }}
+      >
+        {hide ? "表示" : "隠す"}
       </Button>
     </div>
-  )
+  );
 }
 
 export default App
