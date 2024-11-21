@@ -10,7 +10,7 @@ function convert(l) {
   };
 }
 
-export default function VRMMotion({ pose, model }) {
+export default function VRMMotion({ pose, hand, model }) {
   const { clock } = useThree();
 function controlNeckFromShouldersAndNose(
   key,
@@ -103,14 +103,14 @@ function controlNeckFromShouldersAndNose(
     model.humanoid.getNormalizedBoneNode(key).quaternion.slerp(quaternion, 0.1);
   }
 
-  function control(key, n1, n2, c) {
+  function control(key, p, n1, n2, c, factor = 0.3) {
     if (
-      pose.landmarks[0][n1] === undefined ||
-      pose.landmarks[0][n2] === undefined
+      p[n1] === undefined ||
+      p[n2] === undefined
     )
       return;
-    const v1 = convert(pose.landmarks[0][n1]);
-    const v2 = convert(pose.landmarks[0][n2]);
+    const v1 = convert(p[n1]);
+    const v2 = convert(p[n2]);
     const v = new THREE.Vector3(
       v2.x - v1.x,
       v2.y - v1.y,
@@ -119,24 +119,47 @@ function controlNeckFromShouldersAndNose(
     const up = new THREE.Vector3(...c);
     const quaternion = new THREE.Quaternion().setFromUnitVectors(up, v);
     //model.humanoid.getNormalizedBoneNode(key).quaternion.copy(quaternion);
-    model.humanoid.getNormalizedBoneNode(key).quaternion.slerp(quaternion, 0.1);
+    model.humanoid.getNormalizedBoneNode(key).quaternion.slerp(quaternion, factor);
   }
+  
   useEffect(() => {
     if (!pose || !model || !pose.landmarks[0]) return;
     const delta = clock.getDelta();
     //console.log(up)
     controlTorso("chest", 11, 12, [-1, 0, 0]);
     controlNeckFromShouldersAndNose("neck", 11, 12, 0, [0, 0, 0]);
-    control("leftUpperArm", 14, 12, [1, 0, 0]);
-    control("rightUpperArm", 13, 11, [-1, 0, 0]);
-    control("leftLowerArm", 16, 14, [1, 0, 0]);
-    control("rightLowerArm", 15, 13, [-1, 0, 0]);
-    control("leftHand", 18, 16, [0, 0, 1]);
-    control("rightHand", 17, 15, [0, 0, 1]);
-    //control("leftUpperLeg", 26, 24, [0, 1, 0])
-    //control("rightUpperLeg", 25, 23, [0, 1, 0])
-    //control("leftLowerLeg", 28, 26, [0, 1, 0])
-    //control("rightLowerLeg", 27, 25, [0, 1, 0])
+
+    const p = pose.landmarks[0];
+    control("leftUpperArm", p, 14, 12, [1, 0, 0]);
+    control("rightUpperArm", p, 13, 11, [-1, 0, 0]);
+    control("leftLowerArm", p, 16, 14, [1, 0, 0]);
+    control("rightLowerArm", p, 15, 13, [-1, 0, 0]);
+    control("leftHand", p, 18, 16, [0, 0, 1]);
+    control("rightHand", p, 17, 15, [0, 0, 1]);
+
+    let idx;
+    let f = 0.5;
+    let a = [0, 0, -1]
+    idx = hand.handedness.findIndex(x => x[0].categoryName === "Left")
+    if (idx >= 0) {
+      let h = hand.landmarks[idx];
+      controlHand("leftThumbDistal", h, 4, 3, a, f);
+      controlHand("leftThumbMetacarpal", h, 3, 2, a, f);
+      controlHand("leftIndexDistal", h, 8, 7, a, f);
+      controlHand("leftIndexIntermediate", h, 7, 6, a, f);
+      controlHand("leftMiddleDistal", h, 12, 11, a, f);
+      controlHand("leftMiddleIntermediate", h, 11, 10, a, f);
+      controlHand("leftRingDistal", h, 16, 15, a, f);
+      controlHand("leftRingIntermediate", h, 15, 14, a, f);
+      controlHand("leftLittleDistal", h, 20, 19, a, f);
+      controlHand("leftLittleIntermediate", h, 19, 18, a, f);
+    }
+    idx = hand.handedness.findIndex(x => x[0].categoryName === "Right")
+    if (idx >= 0) {
+      let h = hand.landmarks[idx];
+      control("rightThumbDistal", h, 3, 4, [0, 0, -1]);
+      control("rightThumbMetacarpal", h, 2, 3, [0, 0, -1]);
+    }
 
     model.update(delta);
     // eslint-disable-next-line

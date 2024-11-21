@@ -1,8 +1,9 @@
-import { PoseLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
+import { PoseLandmarker, HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import { useEffect, useRef } from "react";
 
-export default function PoseScanner({ detectFlag, camRef, setPose }) {
+export default function PoseScanner({ detectFlag, camRef, setPose, setHand }) {
   const poseLandmarker = useRef();
+  const handLandmarker = useRef();
   const loopStop = useRef();
   useEffect(() => {
     const createPoseLandmarker = async () => {
@@ -11,11 +12,19 @@ export default function PoseScanner({ detectFlag, camRef, setPose }) {
       );
       poseLandmarker.current = await PoseLandmarker.createFromOptions(vision, {
         baseOptions: {
-          modelAssetPath: "poseLandmarkerModel/pose_landmarker_full.task",
+          modelAssetPath: "landmarkerModel/pose_landmarker_full.task",
           delegate: "GPU",
         },
         runningMode: "VIDEO",
         numPoses: 1,
+      });
+      handLandmarker.current = await HandLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath: "landmarkerModel/hand_landmarker.task",
+          delegate: "GPU",
+        },
+        runningMode: "VIDEO",
+        numHands: 2,
       });
     };
     createPoseLandmarker();
@@ -39,6 +48,11 @@ export default function PoseScanner({ detectFlag, camRef, setPose }) {
         setPose(result);
       }
     );
+    const _hand = handLandmarker.current.detectForVideo(
+      camRef.current.video,
+      startTime
+    );
+    setHand(_hand);
     loopStop.current = requestAnimationFrame(loop);
   }
 }

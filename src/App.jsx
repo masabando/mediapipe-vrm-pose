@@ -9,14 +9,17 @@ function App() {
   const [model, setModel] = useState(null)
   const [detectFlag, setDetectFlag] = useState(false)
   const [pose, setPose] = useState();
+  const [hand, setHand] = useState();
   const [hide, setHide] = useState(false)
-  const listenerRef = useRef()
-  const [cameraPos, setCameraPos] = useState([0, 1.6, -3])
+  const firstRef = useRef()
+  const [modelURL, setModelURL] = useState()
+  const [cameraPos, setCameraPos] = useState([0, 1.6, 500])
+  const [bgColor, setBgColor] = useState("#fff")
 
   useEffect(() => {
     // qキーをおしたとき
-    if (listenerRef.current) return;
-    listenerRef.current = document.addEventListener('keydown', (e) => {
+    if (firstRef.current) return;
+    document.addEventListener('keydown', (e) => {
       switch (e.key) {
         case 'q':
           setHide(h => !h)
@@ -25,16 +28,44 @@ function App() {
           break
       }
     })
-    // eslint-disable-next-line
+    window.addEventListener("dragover", (e) => {
+      e.preventDefault();
+    })
+    window.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const files = e.dataTransfer.files;
+      if (files.length === 0) return;
+      const file = files[0];
+      const blob = new Blob([file], { type: "application/octet-stream" });
+      const url = URL.createObjectURL(blob);
+      setModelURL(url);
+    })
+    firstRef.current = true
   }, [])
   return (
     <div>
       <CameraView
-        detectFlag={detectFlag} pose={pose} setPose={setPose}
+        detectFlag={detectFlag}
+        pose={pose} setPose={setPose}
+        hand={hand} setHand={setHand}
         hidden={hide}
       />
-      <View model={model} setModel={setModel} pose={pose} cameraPos={cameraPos} />
-      <ModelControls hide={hide} cameraPos={cameraPos} setCameraPos={setCameraPos} />
+      <View
+        model={model}
+        setModel={setModel}
+        pose={pose}
+        hand={hand}
+        cameraPos={cameraPos}
+        modelURL={modelURL}
+        bgColor={bgColor}
+      />
+      <ModelControls
+        hide={hide}
+        cameraPos={cameraPos}
+        setCameraPos={setCameraPos}
+        bgColor={bgColor}
+        setBgColor={setBgColor}
+      />
       <Button
         hidden={hide}
         onClick={() => setDetectFlag(!detectFlag)}
