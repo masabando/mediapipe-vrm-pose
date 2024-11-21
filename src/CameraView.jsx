@@ -2,10 +2,10 @@ import { useEffect, useRef } from "react";
 import Webcam from "react-webcam";
 import styles from "./CameraView.module.scss";
 import PoseScanner from "./PoseScanner";
-import { DrawingUtils, PoseLandmarker, HandLandmarker } from "@mediapipe/tasks-vision";
+import { DrawingUtils, PoseLandmarker, HandLandmarker, FaceLandmarker } from "@mediapipe/tasks-vision";
 
 export default function CameraView({
-  detectFlag, pose, setPose, hand, setHand, hidden
+  detectFlag, pose, setPose, hand, setHand, face, setFace, hidden
 }) {
   const refs = {
     canvas: useRef(null),
@@ -67,6 +67,37 @@ export default function CameraView({
     }
     // eslint-disable-next-line
   }, [hand]);
+  useEffect(() => {
+    if (!face || hidden) return;
+    for (const faceLandmark of face?.faceLandmarks || []) {
+      refs.drawingUtils.current.drawConnectors(
+        faceLandmark,
+        FaceLandmarker.FACE_LANDMARKS_TESSELATION,
+        { color: "#c0c0c070", lineWidth: 1 }
+      );
+      refs.drawingUtils.current.drawConnectors(
+        faceLandmark,
+        FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,
+        { color: "#0000ff", lineWidth: 3 }
+      );
+      refs.drawingUtils.current.drawConnectors(
+        faceLandmark,
+        FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,
+        { color: "#0000ff", lineWidth: 3 }
+      );
+      refs.drawingUtils.current.drawConnectors(
+        faceLandmark,
+        FaceLandmarker.FACE_LANDMARKS_FACE_OVAL,
+        { color: "#c0c0c0", lineWidth: 3 }
+      );
+      refs.drawingUtils.current.drawConnectors(
+        faceLandmark,
+        FaceLandmarker.FACE_LANDMARKS_LIPS,
+        { color: "#0000ff", lineWidth: 3 }
+      );
+    }
+    // eslint-disable-next-line
+  }, [face]);
   return (
     <div className={styles.poseScannerContainer} hidden={hidden}>
       <Webcam ref={refs.camera} mirrored className={styles.webcam} />
@@ -76,6 +107,7 @@ export default function CameraView({
         camRef={refs.camera}
         setPose={setPose}
         setHand={setHand}
+        setFace={setFace}
       />
     </div>
   );

@@ -1,9 +1,10 @@
-import { PoseLandmarker, HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
+import { PoseLandmarker, HandLandmarker, FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import { useEffect, useRef } from "react";
 
-export default function PoseScanner({ detectFlag, camRef, setPose, setHand }) {
+export default function PoseScanner({ detectFlag, camRef, setPose, setHand, setFace }) {
   const poseLandmarker = useRef();
   const handLandmarker = useRef();
+  const faceLandmarker = useRef();
   const loopStop = useRef();
   useEffect(() => {
     const createPoseLandmarker = async () => {
@@ -25,6 +26,14 @@ export default function PoseScanner({ detectFlag, camRef, setPose, setHand }) {
         },
         runningMode: "VIDEO",
         numHands: 2,
+      });
+      faceLandmarker.current = await FaceLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath: "landmarkerModel/face_landmarker.task",
+          delegate: "GPU",
+        },
+        runningMode: "VIDEO",
+        numFaces: 1,
       });
     };
     createPoseLandmarker();
@@ -53,6 +62,11 @@ export default function PoseScanner({ detectFlag, camRef, setPose, setHand }) {
       startTime
     );
     setHand(_hand);
+    const _face = faceLandmarker.current.detectForVideo(
+      camRef.current.video,
+      startTime
+    );
+    setFace(_face);
     loopStop.current = requestAnimationFrame(loop);
   }
 }

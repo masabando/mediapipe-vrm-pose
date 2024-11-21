@@ -4,7 +4,7 @@ import { Canvas, useThree } from "@react-three/fiber";
 import VRMMotion from "./VRMMotion";
 import { Html } from "@react-three/drei";
 
-export default function View({ model, setModel, pose, hand, cameraPos, modelURL, bgColor }) {
+export default function View({ model, setModel, pose, hand, face, cameraPos, modelURL, bgColor }) {
   const lightRef = useRef();
   const [loading, setLoading] = useState(null);
   function CameraControls() {
@@ -27,7 +27,7 @@ export default function View({ model, setModel, pose, hand, cameraPos, modelURL,
         }}
       >
         <color attach="background" args={[bgColor]} />
-        <VRMMotion model={model} pose={pose} hand={hand} />
+        <VRMMotion model={model} pose={pose} hand={hand} face={face} />
         <CameraControls />
         <ambientLight intensity={0.5} />
         {/* <pointLight position={[4, 4, -4]} intensity={2} castShadow /> */}

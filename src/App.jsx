@@ -10,9 +10,10 @@ function App() {
   const [detectFlag, setDetectFlag] = useState(false)
   const [pose, setPose] = useState();
   const [hand, setHand] = useState();
+  const [face, setFace] = useState();
   const [hide, setHide] = useState(false)
   const firstRef = useRef()
-  const [modelURL, setModelURL] = useState()
+  const [modelURL, setModelURL] = useState("./model/sample.vrm")
   const [cameraPos, setCameraPos] = useState([0, 1.6, 500])
   const [bgColor, setBgColor] = useState("#fff")
 
@@ -48,6 +49,7 @@ function App() {
         detectFlag={detectFlag}
         pose={pose} setPose={setPose}
         hand={hand} setHand={setHand}
+        face={face} setFace={setFace}
         hidden={hide}
       />
       <View
@@ -55,6 +57,7 @@ function App() {
         setModel={setModel}
         pose={pose}
         hand={hand}
+        face={face}
         cameraPos={cameraPos}
         modelURL={modelURL}
         bgColor={bgColor}
