@@ -1,8 +1,35 @@
-# React + Vite
+# mediapipe-vrm-pose
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+任意のVRMモデルを、Webカメラで写した自身の姿勢に合わせて動かせるWebページです。
 
-Currently, two official plugins are available:
+上半身の姿勢、顔(目と口)、指の動きに対応しています。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+姿勢・顔・指の検出にはGoogleの
+[MediaPipe](https://mediapipe-studio.webapps.google.com/home)
+を使用しています。
+
+VRMモデルの表示と姿勢の反映には
+[@pixiv/three-vrm](https://github.com/pixiv/three-vrm)
+を使用しています。
+
+## 使い方
+### デモページ
+[デモページ](https://masabando.github.io/mediapipe-vrm-pose/)
+
+### VRMモデルの変更
+デフォルトのモデルからVRMモデルを変更する場合は、
+任意のVRMモデルファイルを画面にドラッグ&ドロップしてください。
+モデルファイルはクライアント側でのみ使用されるため、
+**VRMファイルがサーバーにアップロードされることはありません** 。
+
+### 検出の開始
+画面左下の「Start」ボタンをクリックしてください。
+
+カメラ映像はクライアント側でのみ使用されるため、
+**カメラ映像がサーバーに送信されることはありません** 。
+
+### UIの表示/非表示
+画面右下の「隠す」ボタンで、UIの表示/非表示を切り替えることができます。
+
+キーボードのQキーを押すことで、「隠す」ボタンも含めてUIを非表示にすることができます。
+
