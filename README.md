@@ -14,6 +14,12 @@ VRMモデルの表示と姿勢の反映には
 [@pixiv/three-vrm](https://github.com/pixiv/three-vrm)
 を使用しています。
 
+## アプリ版
+[vrm-pose-app](https://github.com/masabando/vrm-pose-app)
+
+アプリ版はPCで利用できます。  
+背景を透過して、PC画面を見せつつVTuber的な配信ができます。
+
 ## 使い方
 ### デモページ
 [デモページ](https://masabando.github.io/mediapipe-vrm-pose/)
