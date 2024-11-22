@@ -1,5 +1,7 @@
 # mediapipe-vrm-pose
 
+![screenshot](screenshot.jpg)
+
 任意のVRMモデルを、Webカメラで写した自身の姿勢に合わせて動かせるWebページです。
 
 上半身の姿勢、顔(目と口)、指の動きに対応しています。
