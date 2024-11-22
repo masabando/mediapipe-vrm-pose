@@ -16,7 +16,7 @@ function App() {
   const firstRef = useRef()
   const [modelURL, setModelURL] = useState("./model/sample.vrm")
   const [cameraPos, setCameraPos] = useState([0, 1.6, 500])
-  const [bgColor, setBgColor] = useState("#fff")
+  const [bgColor, setBgColor] = useState("none")
 
   useEffect(() => {
     // qキーをおしたとき

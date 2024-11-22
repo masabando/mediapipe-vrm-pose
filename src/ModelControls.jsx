@@ -46,6 +46,7 @@ export default function ModelControls({ hide, cameraPos, setCameraPos, bgColor, 
         onChange={(e) => setBgColor(e.target.value)}
         defaultValue={bgColor}
       >
+        <option value="none">透過(Appのみ)</option>
         <option value="#fff">白</option>
         <option value="#000">黒</option>
         <option value="#888">グレー</option>
