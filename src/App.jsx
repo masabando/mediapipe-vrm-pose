@@ -12,6 +12,7 @@ function App() {
   const [hand, setHand] = useState();
   const [face, setFace] = useState();
   const [hide, setHide] = useState(false)
+  const [allHide, setAllHide] = useState(false)
   const firstRef = useRef()
   const [modelURL, setModelURL] = useState("./model/sample.vrm")
   const [cameraPos, setCameraPos] = useState([0, 1.6, 500])
@@ -23,6 +24,7 @@ function App() {
     document.addEventListener('keydown', (e) => {
       switch (e.key) {
         case 'q':
+          setAllHide(h => !h)
           setHide(h => !h)
           break
         default:
@@ -84,6 +86,7 @@ function App() {
         {detectFlag ? "Stop" : "Start"}
       </Button>
       <Button
+        hidden={allHide}
         style={{
           position: "fixed",
           bottom: "20px",
